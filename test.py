@@ -17,10 +17,8 @@ import pymongo
 # https://api.bilibili.com/x/v2/reply?callback=jQuery17207233102631476498_1547008925346&jsonp=jsonp&pn=2&type=1&oid=40232658&sort=2&_=1547009806573
 # 第三页
 # https://api.bilibili.com/x/v2/reply?callback=jQuery17207233102631476498_1547008925336&jsonp=jsonp&pn=3&type=1&oid=40232658&sort=0&_=1547009176432
-# 对照组
-# https://api.bilibili.com/x/article/recommends?cid=0&pn=1&ps=20&jsonp=jsonp&aids=&sort=0'
-# 尝试组
-# https://api.bilibili.com/x/v2/reply?callback=jQuery17207233102631476498_1547008925346&jsonp=jsonp&pn=2&type=1&oid=40232658&sort=2
+
+# 视频都有一个av号，
 
 
 #  获取连接的html数据
@@ -47,8 +45,16 @@ def get_page_byurl(url):
             return None
 
 
-def jsons_in_db(html, db_collections):
-    pass
+def get_video_list(space_id):
+    video_list = set()
+    for pn in (1, 3):
+        url = 'https://space.bilibili.com/ajax/member/getSubmitVideos?mid=' + str(space_id) + '&pagesize=30&tid=0&page=' + str(pn) + '&keyword=&order=pubdate'
+        data = json.loads(get_page_byurl(url))
+        for item in data['data']['vlist']:
+            print(item['mid'])
+            video_list.add(item['mid'])
+
+    print(len(video_list))
 
 
 def get_comment():
@@ -64,9 +70,8 @@ def get_comment():
 
 
 def main():
-    # https://space.bilibili.com/ajax/member/getSubmitVideos?mid=326246517&pagesize=30&tid=0&page=1&keyword=&order=pubdate
-    get_page_byurl('https://space.bilibili.com/ajax/member/getSubmitVideos?mid=16151010&pagesize=30&tid=0&page=1&keyword=&order=pubdate')
-
+    get_video_list(330383888)
+    get_page_byurl('https://space.bilibili.com/ajax/member/getSubmitVideos?mid=330383888&pagesize=30&tid=0&page=1&keyword=&order=pubdate')
 
 if __name__ == '__main__':
     main()
