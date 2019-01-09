@@ -36,14 +36,22 @@ def get_page_byurl(url):
             return response.text
         return None
     except RequestException:
-        print('网页状态码异常')
-        return None
+        try:
+            response = requests.post(url, headers=headers)
+            if response.status_code == 200:
+                # response.encoding = ('utf8')
+                print(response.status_code, response.text)
+                return response.text
+        except RequestException:
+            print('网页状态码异常')
+            return None
 
 
 def jsons_in_db(html, db_collections):
     pass
 
-def main():
+
+def get_comment():
     url1 = 'https://api.bilibili.com/x/v2/reply?&jsonp=jsonp&pn=1&type=1&oid=40232658&sort=2'
     url2 = 'https://api.bilibili.com/x/v2/reply?&jsonp=jsonp&pn=2&type=1&oid=40232658&sort=2'
     url3 = 'https://api.bilibili.com/x/v2/reply?&jsonp=jsonp&pn=3&type=1&oid=40232658&sort=2'
@@ -53,5 +61,12 @@ def main():
     print(pn1['data']['replies'])
     for comment in pn1['data']['replies']:
         print(comment['content']['message'])
+
+
+def main():
+    # https://space.bilibili.com/ajax/member/getSubmitVideos?mid=326246517&pagesize=30&tid=0&page=1&keyword=&order=pubdate
+    get_page_byurl('https://space.bilibili.com/ajax/member/getSubmitVideos?mid=16151010&pagesize=30&tid=0&page=1&keyword=&order=pubdate')
+
+
 if __name__ == '__main__':
     main()
