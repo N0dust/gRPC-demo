@@ -22,14 +22,14 @@ import pymongo
 
 
 #  获取连接的html数据
-def get_page_byurl(url):
+def get_page_byurl(url, encode):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36',
     }
     try:
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
-            # response.encoding = ('utf8')
+            response.encoding = (encode)
             print(response.status_code, response.text)
             return response.text
         return None
@@ -49,7 +49,8 @@ def get_video_list(space_id):
     video_list = set()
     for pn in (1, 3):
         url = 'https://space.bilibili.com/ajax/member/getSubmitVideos?mid=' + str(space_id) + '&pagesize=30&tid=0&page=' + str(pn) + '&keyword=&order=pubdate'
-        data = json.loads(get_page_byurl(url))
+        data = json.loads(get_page_byurl(url, 'unicode_escape').replace('\r\n', ''))
+        print(data)
         for item in data['data']['vlist']:
             print(item['mid'])
             video_list.add(item['mid'])
@@ -70,8 +71,9 @@ def get_comment():
 
 
 def main():
-    get_video_list(330383888)
-    get_page_byurl('https://space.bilibili.com/ajax/member/getSubmitVideos?mid=330383888&pagesize=30&tid=0&page=1&keyword=&order=pubdate')
+    # get_video_list(330383888)
+    url = 'https://space.bilibili.com/ajax/member/getSubmitVideos?mid=837470&pagesize=30&tid=0&page=1'
+    print(get_page_byurl(url, 'unicode_escape').replace("\r\n", ""))
 
 if __name__ == '__main__':
     main()
