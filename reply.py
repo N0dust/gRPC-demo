@@ -40,6 +40,7 @@ def data_insert_db(data, db_collections):
             print('已存在此对象')
 
 
+# 获取用户的所有视频id
 def get_video_list(space_id):
     video_list = set()
     for pn in (1, 3):
@@ -59,6 +60,7 @@ def get_video_list(space_id):
     return video_list
 
 
+# 保存评论
 def save_comment(av_number, MongoClient):
     for pn in range(1, 9):
         url = 'https://api.bilibili.com/x/v2/reply?&jsonp=jsonp&pn=' + str(pn) + '&type=1&oid=' + str(av_number)
@@ -91,6 +93,7 @@ def save_comment(av_number, MongoClient):
 
 def main():
     reply_DB = pymongo.MongoClient('mongodb://localhost:27017/')['test']['reply']
+    # 5128788是用户id
     video_list = get_video_list(5128788)
     for av_number in video_list:
         save_comment(av_number, reply_DB)
