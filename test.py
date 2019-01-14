@@ -5,9 +5,8 @@ import time
 import pymongo
 
 
-
 #  获取连接的html数据
-def get_page_byurl(url, encode):
+def get_page_by_url(url, encode):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36',
     }
@@ -29,11 +28,23 @@ def get_page_byurl(url, encode):
             return None
 
 
+def data_insert_db(data, db_collections):
+    if db_collections.find_one() is None:
+        db_collections.insert_one(data)
+    else:
+        result = db_collections.find({'rpid': data['rpid']}).count()
+        if result == 0:
+            print('result', result, data['rpid'], data)
+            db_collections.insert_one(data)
+        else:
+            print('已存在此对象')
+
+
 def get_video_list(space_id):
     video_list = set()
     for pn in (1, 3):
         url = 'https://space.bilibili.com/ajax/member/getSubmitVideos?mid=' + str(space_id) + '&pagesize=30&tid=0&page=' + str(pn) + '&keyword=&order=pubdate'
-        string = get_page_byurl(url, 'unicode_escape')
+        string = get_page_by_url(url, 'unicode_escape')
         if len(string) == 67:
             print('获取视频列表循环：结束')
             break
@@ -48,10 +59,10 @@ def get_video_list(space_id):
     return video_list
 
 
-def get_comment(av_number):
+def save_comment(av_number, MongoClient):
     for pn in range(1, 9):
         url = 'https://api.bilibili.com/x/v2/reply?&jsonp=jsonp&pn=' + str(pn) + '&type=1&oid=' + str(av_number)
-        page = get_page_byurl(url, 'utf-8')
+        page = get_page_by_url(url, 'utf-8')
         if page is None:
             print('获取评论循环：结束（页面空）')
             break
@@ -73,14 +84,16 @@ def get_comment(av_number):
             pass
         else:
             for comment in data['data']['replies']:
+                data_insert_db(comment, MongoClient)
                 print(comment['content']['message'])
         page_before = page
 
 
 def main():
-    vedeo_list = get_video_list(5128788)
-    for av_number in vedeo_list:
-        get_comment(av_number)
+    reply_DB = pymongo.MongoClient('mongodb://localhost:27017/')['test']['reply']
+    video_list = get_video_list(5128788)
+    for av_number in video_list:
+        save_comment(av_number, reply_DB)
 
 
 if __name__ == '__main__':
