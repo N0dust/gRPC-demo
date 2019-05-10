@@ -24,6 +24,7 @@ def getMagnetUrl(id):
 
 
 def main():
+    # id即番号
     id = 'IPX-292'
     getMagnetUrl(id)
 
