@@ -24,7 +24,7 @@ def getMagnetUrl(id):
 
 
 def main():
-    # id即番号
+    # id即番号，通过番号来获取磁力链接
     id = 'IPX-292'
     getMagnetUrl(id)
 
