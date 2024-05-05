@@ -16,7 +16,7 @@ type ProductService struct {
 	*product.UnimplementedProductServiceServer
 }
 
-func (s *ProductService) CreateProduct(ctx context.Context, req *product.ProductReq) (*product.ProductResp, error) {
+func (s *ProductService) CreateProduct(_ context.Context, req *product.ProductReq) (*product.ProductResp, error) {
 	result := new(product.ProductResp)
 	var err error
 	_, ok := cacheTable[req.Id]
@@ -37,7 +37,7 @@ func (s *ProductService) CreateProduct(ctx context.Context, req *product.Product
 	return result, nil
 }
 
-func (s *ProductService) GetProduct(ctx context.Context, req *product.ProductReq) (*product.ProductResp, error) {
+func (s *ProductService) GetProduct(_ context.Context, req *product.ProductReq) (*product.ProductResp, error) {
 	result := new(product.ProductResp)
 	p, ok := cacheTable[req.Id]
 	if !ok {
@@ -52,7 +52,7 @@ func (s *ProductService) GetProduct(ctx context.Context, req *product.ProductReq
 	return result, nil
 }
 
-func (s *ProductService) DeleteProduct(ctx context.Context, req *product.ProductReq) (*product.ProductResp, error) {
+func (s *ProductService) DeleteProduct(_ context.Context, req *product.ProductReq) (*product.ProductResp, error) {
 	result := new(product.ProductResp)
 	delete(cacheTable, req.Id)
 	result.Success = true
