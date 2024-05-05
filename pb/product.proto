@@ -1,0 +1,33 @@
+syntax = "proto3";
+option go_package = "./product";
+
+// protoc --go_out=. *.proto
+// protoc --go-grpc_out=. *.proto
+
+service ProductService {
+  rpc CreateProduct (ProductReq) returns (ProductResp) { }
+  rpc GetProduct (ProductReq) returns (ProductResp) { }
+}
+
+message ProductReq{
+  string id = 1;
+  Product product = 2;
+}
+
+message ProductResp{
+  bool success = 1;
+  string msg = 2;
+  Product product = 3;
+}
+
+
+message Product {
+  string id = 1;  // ID
+  string title = 2;
+  repeated sku skus = 3;
+}
+
+message sku {
+  string size = 1;
+  fixed64 price = 2;
+}
