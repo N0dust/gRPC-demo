@@ -7,6 +7,7 @@ option go_package = "./product";
 service ProductService {
   rpc CreateProduct (ProductReq) returns (ProductResp) { }
   rpc GetProduct (ProductReq) returns (ProductResp) { }
+  rpc DeleteProduct (ProductReq) returns (ProductResp) { }
 }
 
 message ProductReq{

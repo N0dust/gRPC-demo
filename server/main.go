@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"gRPC-demo/pb/product"
 	"log"
 	"net"
@@ -14,6 +15,13 @@ var cacheTable = make(map[string]*product.Product)
 
 type ProductService struct {
 	*product.UnimplementedProductServiceServer
+}
+
+func printMap() {
+	fmt.Println("map len", len(cacheTable))
+	for s, p := range cacheTable {
+		fmt.Println("Key", s, "value", *p)
+	}
 }
 
 func (s *ProductService) CreateProduct(_ context.Context, req *product.ProductReq) (*product.ProductResp, error) {
@@ -34,6 +42,7 @@ func (s *ProductService) CreateProduct(_ context.Context, req *product.ProductRe
 
 	cacheTable[req.Id] = req.Product
 	result.Success = true
+	printMap()
 	return result, nil
 }
 
@@ -48,7 +57,7 @@ func (s *ProductService) GetProduct(_ context.Context, req *product.ProductReq) 
 	}
 	result.Product = p
 	result.Success = true
-
+	printMap()
 	return result, nil
 }
 

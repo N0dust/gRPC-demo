@@ -1,2 +1,2 @@
-# gRPC-service
-userGroup表的grpc服务端
+# gRPC-service-demo
+grpc server and client demo

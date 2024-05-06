@@ -3,6 +3,7 @@ module gRPC-demo
 go 1.20
 
 require (
+	github.com/pkg/errors v0.9.1
 	google.golang.org/grpc v1.63.2
 	google.golang.org/protobuf v1.34.0
 )
